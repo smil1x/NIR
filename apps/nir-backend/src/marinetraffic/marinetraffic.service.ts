@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 
 @Injectable()
-export class AppService {
+export class MarinetrafficService {
   getHello(): string {
     return 'It is nir-backend app';
   }
