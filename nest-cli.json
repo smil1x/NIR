@@ -1,0 +1,22 @@
+{
+  "$schema": "https://json.schemastore.org/nest-cli",
+  "collection": "@nestjs/schematics",
+  "sourceRoot": "apps/nir-backend/src",
+  "monorepo": true,
+  "root": "apps/nir-backend",
+  "compilerOptions": {
+    "webpack": true,
+    "tsConfigPath": "apps/nir-backend/tsconfig.app.json"
+  },
+  "projects": {
+    "nir-backend": {
+      "type": "application",
+      "root": "apps/nir-backend",
+      "entryFile": "main",
+      "sourceRoot": "apps/nir-backend/src",
+      "compilerOptions": {
+        "tsConfigPath": "apps/nir-backend/tsconfig.app.json"
+      }
+    }
+  }
+}
