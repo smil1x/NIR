@@ -1,6 +1,6 @@
 import { Controller, Get } from '@nestjs/common';
 import { MarinetrafficService } from './marinetraffic.service';
-import {ApiOkResponse, ApiTags} from "@nestjs/swagger";
+import { ApiOkResponse, ApiTags } from '@nestjs/swagger';
 
 @ApiTags('Marinetraffic')
 @Controller()
@@ -12,7 +12,7 @@ export class MarinetrafficController {
     description: 'Successfully',
     type: String,
   })
-  getHello(): string {
-    return this.appService.getHello();
+  getSingleVesselPositions(): string {
+    return this.appService.getSingleVesselPositions();
   }
 }

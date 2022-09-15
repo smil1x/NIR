@@ -8,6 +8,10 @@ export const getSchema = () => ({
       description: 'The port on which the application is running',
       type: 'number',
     },
+    MARINETRAFIC_KEY: {
+      description: 'marinetraffic api key',
+      type: 'string',
+    },
   },
-  required: [],
+  required: ['MARINETRAFIC_KEY'],
 });
