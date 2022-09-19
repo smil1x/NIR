@@ -1,4 +1,6 @@
+import { IMarinetrafficConfig } from './marinetraffic-config.interface';
+
 export interface BaseConfigInterface {
   APP_PORT?: number;
-  MARINETRAFIC_KEY: string;
+  MARINETRAFFIC_CONFIG: IMarinetrafficConfig;
 }

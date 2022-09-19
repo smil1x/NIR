@@ -1,37 +1,38 @@
 import { Controller, Get, Param } from '@nestjs/common';
 import { MarinetrafficService } from './marinetraffic.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
+import { HistoryPositionDto, PositionDto } from './dto';
 
 @ApiTags('Marinetraffic')
 @Controller()
 export class MarinetrafficController {
   constructor(private readonly appService: MarinetrafficService) {}
 
-  @Get(':shipid')
+  @Get(':shipId/position')
   @ApiOperation({
     summary: 'Get Vessel Position',
   })
   @ApiOkResponse({
     description: 'Successfully',
-    type: String,
+    type: PositionDto,
   })
   async getSingleVesselPositions(
-    @Param('shipid') shipid: number,
-  ): Promise<any> {
-    return await this.appService.getSingleVesselPositions(shipid);
+    @Param('shipId') shipId: number,
+  ): Promise<PositionDto> {
+    return await this.appService.getSingleVesselPositions(shipId);
   }
 
-  @Get(':shipid/history')
+  @Get(':shipId/history')
   @ApiOperation({
     summary: 'Get Vessel Historical Positions',
   })
   @ApiOkResponse({
     description: 'Successfully',
-    type: String,
+    type: [HistoryPositionDto],
   })
   async getVesselHistoricalPositions(
-    @Param('shipid') shipid: number,
-  ): Promise<any> {
-    return await this.appService.getVesselHistoricalPositions(shipid);
+    @Param('shipId') shipId: number,
+  ): Promise<Array<HistoryPositionDto>> {
+    return await this.appService.getVesselHistoricalPositions(shipId);
   }
 }

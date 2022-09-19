@@ -9,11 +9,7 @@ export class AppModule {
 
     return {
       module: AppModule,
-      imports: [
-        MarinetrafficModule.register({
-          marinetrafficKey: config.MARINETRAFIC_KEY,
-        }),
-      ],
+      imports: [MarinetrafficModule.register(config.MARINETRAFFIC_CONFIG)],
     };
   }
 }

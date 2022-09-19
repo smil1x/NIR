@@ -1,7 +1,8 @@
 import { DynamicModule, Module } from '@nestjs/common';
 import { MarinetrafficController } from './marinetraffic.controller';
 import { MarinetrafficService } from './marinetraffic.service';
-import { MARINETRAFIC_KEY } from './constants';
+import { MARINETRAFFIC_CONFIG } from './constants';
+import { IMarinetrafficConfig } from '../core/interfaces';
 
 @Module({
   imports: [],
@@ -9,19 +10,15 @@ import { MARINETRAFIC_KEY } from './constants';
   providers: [MarinetrafficService],
 })
 export class MarinetrafficModule {
-  static register({
-    marinetrafficKey,
-  }: {
-    marinetrafficKey: string;
-  }): DynamicModule {
+  static register(marinetrafficConfig: IMarinetrafficConfig): DynamicModule {
     return {
       module: MarinetrafficModule,
       controllers: [MarinetrafficController],
       providers: [
         MarinetrafficService,
         {
-          provide: MARINETRAFIC_KEY,
-          useValue: marinetrafficKey,
+          provide: MARINETRAFFIC_CONFIG,
+          useValue: marinetrafficConfig,
         },
       ],
     };
