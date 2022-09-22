@@ -1,6 +1,6 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MARINETRAFFIC_CONFIG } from './constants';
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { HistoryPositionDto, PositionDto } from './dto';
 import { IMarinetrafficConfig } from '../core/interfaces';
 
@@ -11,34 +11,69 @@ export class MarinetrafficService {
     protected readonly marinetrafficConfig: IMarinetrafficConfig,
   ) {}
 
-  async getSingleVesselPositions(shipid: number): Promise<any> {
+  async getSingleVesselPosition(shipId: number): Promise<PositionDto | []> {
     const { SINGLE_VESSEL_POSITIONS_KEY } = this.marinetrafficConfig;
+    let responseData: string[][];
+    try {
+      responseData = await this.requestSingleVesselPosition(
+        shipId,
+        SINGLE_VESSEL_POSITIONS_KEY,
+      );
+    } catch (err) {
+      console.log('err', err.response.data);
+    }
+    console.log(responseData);
+    return (
+      responseData.map((pos) => {
+        return PositionDto.FromArray(pos);
+      })[0] || []
+    );
+  }
+
+  async getVesselHistoricalPositions(
+    shipId: number,
+  ): Promise<HistoryPositionDto[]> {
+    const { SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY } = this.marinetrafficConfig;
+    let responseData: string[][];
+    try {
+      responseData = await this.requestVesselHistoricalPositions(
+        shipId,
+        SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY,
+      );
+    } catch (err) {
+      console.log(err.response.data);
+    }
+
+    return responseData.map((pos) => {
+      return HistoryPositionDto.FromArray(pos);
+    });
+  }
+
+  private async requestSingleVesselPosition(
+    shipId: number,
+    requestKey: string,
+  ): Promise<string[][]> {
     return axios
       .get(
-        `https://services.marinetraffic.com/api/exportvessel/${SINGLE_VESSEL_POSITIONS_KEY}`,
+        `https://services.marinetraffic.com/api/exportvessel/${requestKey}`,
         {
           params: {
             v: 3,
-            shipid: shipid,
+            shipid: shipId,
             protocol: 'json',
           },
         },
       )
-      .then((res: AxiosResponse<Array<Array<string>>>): PositionDto => {
-        return res.data.map((pos) => {
-          return PositionDto.FromArray(pos);
-        })[0];
-      })
-      .catch((err) => {
-        console.log(err);
-      });
+      .then((res) => res.data);
   }
 
-  async getVesselHistoricalPositions(shipId: number): Promise<any> {
-    const { SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY } = this.marinetrafficConfig;
+  private async requestVesselHistoricalPositions(
+    shipId: number,
+    requestKey,
+  ): Promise<string[][]> {
     return axios
       .get(
-        `https://services.marinetraffic.com/api/exportvesseltrack/${SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY}`,
+        `https://services.marinetraffic.com/api/exportvesseltrack/${requestKey}`,
         {
           params: {
             v: 1,
@@ -49,15 +84,6 @@ export class MarinetrafficService {
           },
         },
       )
-      .then(
-        (res: AxiosResponse<Array<Array<string>>>): HistoryPositionDto[] => {
-          return res.data.map((pos) => {
-            return HistoryPositionDto.FromArray(pos);
-          });
-        },
-      )
-      .catch((err) => {
-        console.log('errrrrrrrrrrrrrrrrr', err.response.data);
-      });
+      .then((res) => res.data);
   }
 }

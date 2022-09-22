@@ -16,10 +16,10 @@ export class MarinetrafficController {
     description: 'Successfully',
     type: PositionDto,
   })
-  async getSingleVesselPositions(
+  async getSingleVesselPosition(
     @Param('shipId') shipId: number,
-  ): Promise<PositionDto> {
-    return await this.appService.getSingleVesselPositions(shipId);
+  ): Promise<PositionDto | []> {
+    return await this.appService.getSingleVesselPosition(shipId);
   }
 
   @Get(':shipId/history')
