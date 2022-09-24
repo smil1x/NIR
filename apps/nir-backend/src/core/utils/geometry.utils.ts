@@ -27,10 +27,11 @@ export const pointDeviationFromStraightLine = (
   );
 };
 
+// TODO: is there a difference in the direction of the LineSegment?
 export const pointDeviationFromLineSegment = (
   lineSegment: IStraightLine,
   point: IPoint,
-) => {
+): number => {
   let pointDeviation;
 
   const vectorS1P: IVector2 = vector2FromPoints(
