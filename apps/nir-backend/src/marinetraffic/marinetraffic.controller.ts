@@ -6,7 +6,7 @@ import { HistoryPositionDto, PositionDto } from './dto';
 @ApiTags('Marinetraffic')
 @Controller()
 export class MarinetrafficController {
-  constructor(private readonly appService: MarinetrafficService) {}
+  constructor(private readonly marinetrafficService: MarinetrafficService) {}
 
   @Get(':shipId/position')
   @ApiOperation({
@@ -19,7 +19,7 @@ export class MarinetrafficController {
   async getSingleVesselPosition(
     @Param('shipId') shipId: number,
   ): Promise<PositionDto | []> {
-    return await this.appService.getSingleVesselPosition(shipId);
+    return await this.marinetrafficService.getSingleVesselPosition(shipId);
   }
 
   @Get(':shipId/history')
@@ -33,6 +33,14 @@ export class MarinetrafficController {
   async getVesselHistoricalPositions(
     @Param('shipId') shipId: number,
   ): Promise<Array<HistoryPositionDto>> {
-    return await this.appService.getVesselHistoricalPositions(shipId);
+    return await this.marinetrafficService.getVesselHistoricalPositions(shipId);
+  }
+
+  @Get('test')
+  @ApiOperation({
+    summary: 'Test',
+  })
+  test() {
+    return this.marinetrafficService.test();
   }
 }

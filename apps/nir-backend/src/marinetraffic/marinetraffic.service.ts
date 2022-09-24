@@ -3,6 +3,9 @@ import { MARINETRAFFIC_CONFIG } from './constants';
 import axios from 'axios';
 import { HistoryPositionDto, PositionDto } from './dto';
 import { IMarinetrafficConfig } from '../core/interfaces';
+import { HistoricalPositions, VesselRout } from './mock-data';
+import * as haversine from 'haversine';
+import { pointDeviationFromLineSegment } from '../core/utils';
 
 @Injectable()
 export class MarinetrafficService {
@@ -85,5 +88,26 @@ export class MarinetrafficService {
         },
       )
       .then((res) => res.data);
+  }
+
+  test() {
+    const historyTrack = HistoricalPositions;
+    const rout = VesselRout;
+    const deviation = pointDeviationFromLineSegment(
+      { x1: -6, x2: -4, y1: 1, y2: 1 },
+      { x: -2, y: 2 },
+    );
+    // const start = {
+    //   latitude: 30.849635,
+    //   longitude: -83.24559,
+    // };
+    //
+    // const end = {
+    //   latitude: 27.950575,
+    //   longitude: -82.457178,
+    // };
+    // const distance = haversine(start, end);
+    console.log(deviation);
+    return deviation;
   }
 }
