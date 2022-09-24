@@ -2,16 +2,11 @@ import { Inject, Injectable } from '@nestjs/common';
 import { MARINETRAFFIC_CONFIG } from './constants';
 import axios from 'axios';
 import { HistoryPositionDto, PositionDto } from './dto';
-import {
-  IMarinetrafficConfig,
-  IPoint,
-  IStraightLine,
-} from '../core/interfaces';
+import { IMarinetrafficConfig, IPoint, IRoutSegment } from '../core/interfaces';
 import { HistoricalPositions, VesselRout } from './mock-data';
-import * as haversine from 'haversine';
 import {
-  distanceBetweenPoints,
-  pointDeviationFromLineSegment,
+  distanceBetweenGeoCoordinates,
+  pointDeviationFromRoutSegment,
 } from '../core/utils';
 
 @Injectable()
@@ -100,74 +95,48 @@ export class MarinetrafficService {
   test() {
     const historyTrack = HistoricalPositions;
     const rout = VesselRout;
-    const minNormalPointDeviation = 0.1;
-    // const historyTrackIndex = 1;
+    const minNormalPointDeviation = 0;
 
     const deviationPoints = historyTrack.reduce(
       (deviationArray, historyPoint) => {
-        const nearestRoutSegment: IStraightLine = this.searchNearestRoutSegment(
-          rout,
-          historyPoint,
-        );
-        const deviationDistance = pointDeviationFromLineSegment(
-          nearestRoutSegment,
-          historyPoint,
-        );
-        return deviationDistance > minNormalPointDeviation
-          ? [...deviationArray, historyPoint]
+        const pointDeviation = this.pointDeviationFromRout(rout, historyPoint);
+
+        return pointDeviation.deviation > minNormalPointDeviation
+          ? [...deviationArray, pointDeviation]
           : deviationArray;
       },
       [],
     );
 
     return deviationPoints;
-    // return { ...nearestRoutSegment, hPoint: historyTrackIndex };
   }
 
-  // refactor
   searchNearestRoutPointIndex(rout: IPoint[], point: IPoint): number {
     const nearestPoint = rout.reduce(
-      (nearestRoutPointIndex, currentRoutPoint, index, rout) => {
-        const start = {
-          x: currentRoutPoint.x,
-          y: currentRoutPoint.y,
-        };
-
-        const end = {
-          x: point.x,
-          y: point.y,
-        };
-
-        // const start = {
-        //   longitude: currentRoutPoint.x,
-        //   latitude: currentRoutPoint.y,
-        // };
-        //
-        // const end = {
-        //   longitude: point.x,
-        //   latitude: point.y,
-        // };
-
+      (nearestRoutPoint, currentRoutPoint, index, rout) => {
         if (index === 0) {
           return {
             index: 0,
-            dist: distanceBetweenPoints(start, end),
+            dist: distanceBetweenGeoCoordinates(currentRoutPoint, point),
             pos: { ...currentRoutPoint },
           };
         }
 
-        const currentDist = distanceBetweenPoints(start, end);
+        const currentDist = distanceBetweenGeoCoordinates(
+          currentRoutPoint,
+          point,
+        );
 
         return {
-          dist: Math.min(currentDist, nearestRoutPointIndex.dist),
+          dist: Math.min(currentDist, nearestRoutPoint.dist),
           index:
-            currentDist > nearestRoutPointIndex.dist
-              ? nearestRoutPointIndex.index
+            currentDist > nearestRoutPoint.dist
+              ? nearestRoutPoint.index
               : index,
           pos: {
             ...rout[
-              currentDist > nearestRoutPointIndex.dist
-                ? nearestRoutPointIndex.index
+              currentDist > nearestRoutPoint.dist
+                ? nearestRoutPoint.index
                 : index
             ],
           },
@@ -179,26 +148,55 @@ export class MarinetrafficService {
     return nearestPoint.index;
   }
 
-  searchNearestRoutSegment(rout: IPoint[], point: IPoint): IStraightLine {
+  // type method
+  pointDeviationFromRout(rout: IPoint[], point: IPoint): any {
     const nearestPointIndex = this.searchNearestRoutPointIndex(rout, point);
-    let secondNearestPointIndex: number;
+    let secondRoutPointIndex: number;
+    let deviation: number;
     if (nearestPointIndex === 0) {
-      secondNearestPointIndex = 1;
+      secondRoutPointIndex = 1;
     } else if (nearestPointIndex === rout.length - 1) {
-      secondNearestPointIndex = rout.length - 1;
+      secondRoutPointIndex = rout.length - 1;
     } else {
-      secondNearestPointIndex =
-        distanceBetweenPoints(rout[nearestPointIndex - 1], point) >
-        distanceBetweenPoints(rout[nearestPointIndex + 1], point)
-          ? nearestPointIndex + 1
-          : nearestPointIndex - 1;
+      const leftRoutSegment: IRoutSegment = {
+        x1: rout[nearestPointIndex].x,
+        y1: rout[nearestPointIndex].y,
+        x2: rout[nearestPointIndex - 1].x,
+        y2: rout[nearestPointIndex - 1].y,
+      };
+      const rightRoutSegment = {
+        x1: rout[nearestPointIndex].x,
+        y1: rout[nearestPointIndex].y,
+        x2: rout[nearestPointIndex + 1].x,
+        y2: rout[nearestPointIndex + 1].y,
+      };
+      const deviationFromLeftSegment = pointDeviationFromRoutSegment(
+        leftRoutSegment,
+        point,
+      );
+      const deviationFromRightSegment = pointDeviationFromRoutSegment(
+        rightRoutSegment,
+        point,
+      );
+      secondRoutPointIndex =
+        deviationFromLeftSegment > deviationFromRightSegment
+          ? nearestPointIndex - 1
+          : nearestPointIndex + 1;
+      deviation = Math.min(
+        deviationFromRightSegment,
+        deviationFromRightSegment,
+      );
     }
 
     return {
-      x1: rout[nearestPointIndex].x,
-      y1: rout[nearestPointIndex].y,
-      x2: rout[secondNearestPointIndex].x,
-      y2: rout[secondNearestPointIndex].y,
+      ...point,
+      deviation,
+      routSegment: {
+        x1: rout[nearestPointIndex].x,
+        y1: rout[nearestPointIndex].y,
+        x2: rout[secondRoutPointIndex].x,
+        y2: rout[secondRoutPointIndex].y,
+      },
     };
   }
 }

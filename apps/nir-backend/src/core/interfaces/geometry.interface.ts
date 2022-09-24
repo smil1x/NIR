@@ -8,7 +8,7 @@ export interface IVector2 {
   y: number;
 }
 
-export interface IStraightLine {
+export interface IRoutSegment {
   x1: number;
   y1: number;
   x2: number;
