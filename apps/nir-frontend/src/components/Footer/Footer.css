@@ -1,0 +1,16 @@
+.app-footer {
+    display: flex;
+    align-items: center;
+    justify-content: start;
+    height: 31px;
+    background-color: #5F9EDC;
+    position: sticky;
+    width: 100%;
+    bottom: 1px;
+}
+.app-footer-text{
+    padding-left: 1680px;
+    font-size: 18px;
+    letter-spacing: 1px;
+    color: white;
+}

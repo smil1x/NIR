@@ -1,7 +1,13 @@
-import { Controller, Get, Param } from '@nestjs/common';
+import { Body, Controller, Get, Param, Post, Query } from '@nestjs/common';
 import { MarinetrafficService } from './marinetraffic.service';
 import { ApiOkResponse, ApiOperation, ApiTags } from '@nestjs/swagger';
-import { HistoryPositionDto, PositionDto } from './dto';
+import {
+  DaysQuery,
+  HistoryPositionDto,
+  PositionDto,
+  SearchDeviationDto,
+} from './dto';
+import { DeviationModel } from './dto/deviation.model';
 
 @ApiTags('Marinetraffic')
 @Controller()
@@ -31,16 +37,30 @@ export class MarinetrafficController {
     type: [HistoryPositionDto],
   })
   async getVesselHistoricalPositions(
-    @Param('shipId') shipId: number,
+    @Param('shipId') shipId: string,
+    @Query() { days }: DaysQuery,
   ): Promise<Array<HistoryPositionDto>> {
-    return await this.marinetrafficService.getVesselHistoricalPositions(shipId);
+    return await this.marinetrafficService.getVesselHistoricalPositions(
+      shipId,
+      days,
+    );
   }
 
-  @Get('test')
+  @Post(':shipId/deviation')
   @ApiOperation({
-    summary: 'Test',
+    summary: 'Get deviation from the route',
   })
-  test() {
-    return this.marinetrafficService.test();
+  @ApiOkResponse({
+    description: 'Successfully',
+    type: DeviationModel,
+  })
+  async deviationFromRoute(
+    @Param('shipId') shipId: string,
+    @Body() searchDeviationDto: SearchDeviationDto,
+  ): Promise<DeviationModel> {
+    return await this.marinetrafficService.deviationFromRoute(
+      shipId,
+      searchDeviationDto,
+    );
   }
 }

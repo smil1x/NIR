@@ -1,0 +1,42 @@
+.container{
+    display: flex;
+}
+.historySection{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 100%;
+    padding-bottom: 10px;
+}
+.historySection > h2 {
+    margin: 10px 0;
+}
+
+.historyInputs{
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 40px;
+    width: 600px;
+}
+.historyInputs > * {
+    margin-right: 20px;
+}
+
+/*horror*/
+.historyInputs > button {
+    width: 1000px;
+}
+
+.historyRoutSection {
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.historyRoutSection > button {
+    margin-left: 20px;
+    height: 40px;
+    margin-top: 0;
+}

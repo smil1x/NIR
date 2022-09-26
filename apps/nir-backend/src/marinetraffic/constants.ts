@@ -1,1 +1,3 @@
 export const MARINETRAFFIC_CONFIG = Symbol('MARINETRAFFIC_CONFIG');
+
+export const DEFAULT_HISTORY_PERIOD = '1';

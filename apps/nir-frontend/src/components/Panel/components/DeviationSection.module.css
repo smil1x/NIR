@@ -1,0 +1,55 @@
+.deviationSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: start;
+    width: 100%;
+}
+.deviationSection > h2 {
+    margin-bottom: 0;
+}
+
+.deviationSection > button {
+    margin-bottom: 5px;
+}
+
+.routeSection{
+    display: flex;
+    justify-content: start;
+    align-items: start;
+}
+
+.randomSection{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 246px;
+    margin-left: 20px;
+}
+
+.randomSection > input{
+    /*margin-left: 20px;*/
+    width: 216px;
+}
+.randomSection > button{
+    width: 100%;
+}
+
+.historyInputs{
+    margin-top: 20px;
+    /*margin-bottom:60px;*/
+    display: flex;
+    justify-content: left;
+    align-items: center;
+    height: 40px;
+    width: 920px;
+}
+.historyInputs > * {
+    margin-right: 20px;
+}
+
+/*horror*/
+.historyInputs > button {
+    /*width: 1000px;*/
+}
+

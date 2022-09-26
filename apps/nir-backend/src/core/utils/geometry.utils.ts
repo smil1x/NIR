@@ -1,12 +1,18 @@
-import { IPoint, IRoutSegment, IVector2 } from '../interfaces';
+import { IRoutSegment, IGeoVector2, Point } from '../interfaces';
 import * as haversine from 'haversine';
 
-export const vector2FromPoints = (p1: IPoint, p2: IPoint): IVector2 => {
-  return { x: p2.x - p1.x, y: p2.y - p1.y };
+export const vector2FromPoints = (p1: Point, p2: Point): IGeoVector2 => {
+  return {
+    lat: Number(p2.lat) - Number(p1.lat),
+    lon: Number(p2.lon) - Number(p1.lon),
+  };
 };
 
-export const v2ScalarProduct = (vec1: IVector2, vec2: IVector2): number => {
-  return vec1.x * vec2.x + vec1.y * vec2.y;
+export const v2ScalarProduct = (
+  vec1: IGeoVector2,
+  vec2: IGeoVector2,
+): number => {
+  return vec1.lon * vec2.lon + vec1.lat * vec2.lat;
 };
 
 export const triangleArea = (a: number, b: number, c: number) => {
@@ -25,69 +31,58 @@ export const triangleHeight = (
 };
 
 export const pointDeviationFromRoutSegment = (
-  routSegment: IRoutSegment,
-  point: IPoint,
+  routeSegment: IRoutSegment,
+  point: Point,
 ): number => {
   let pointDeviation;
 
-  const vectorS1P: IVector2 = vector2FromPoints(
-    { x: routSegment.x1, y: routSegment.y1 },
-    point,
+  const vectorSP: IGeoVector2 = vector2FromPoints(routeSegment.start, point);
+
+  const vectorSE: IGeoVector2 = vector2FromPoints(
+    routeSegment.start,
+    routeSegment.end,
   );
 
-  const vectorS1S2: IVector2 = vector2FromPoints(
-    { x: routSegment.x1, y: routSegment.y1 },
-    { x: routSegment.x2, y: routSegment.y2 },
+  const vectorEP: IGeoVector2 = vector2FromPoints(routeSegment.end, point);
+  const vectorES: IGeoVector2 = vector2FromPoints(
+    routeSegment.end,
+    routeSegment.start,
   );
 
-  const vectorS2P: IVector2 = vector2FromPoints(
-    { x: routSegment.x2, y: routSegment.y2 },
-    point,
-  );
-  const vectorS2S1: IVector2 = vector2FromPoints(
-    { x: routSegment.x2, y: routSegment.y2 },
-    { x: routSegment.x1, y: routSegment.y1 },
-  );
-
-  const lineS1P = distanceBetweenGeoCoordinates(
-    { x: routSegment.x1, y: routSegment.y1 },
-    point,
-  );
-  const lineS2P = distanceBetweenGeoCoordinates(
-    { x: routSegment.x2, y: routSegment.y2 },
-    point,
-  );
+  const lineSP = metersBetweenGeoCoordinates(routeSegment.start, point);
+  const lineEP = metersBetweenGeoCoordinates(routeSegment.end, point);
 
   if (
-    v2ScalarProduct(vectorS1P, vectorS1S2) < 0 ||
-    v2ScalarProduct(vectorS2P, vectorS2S1) < 0
+    v2ScalarProduct(vectorSP, vectorSE) < 0 ||
+    v2ScalarProduct(vectorEP, vectorES) < 0
   ) {
-    pointDeviation = Math.min(lineS1P, lineS2P);
+    pointDeviation = Math.min(lineSP, lineEP);
   } else {
-    const base = distanceBetweenGeoCoordinates(
-      { x: routSegment.x1, y: routSegment.y1 },
-      { x: routSegment.x2, y: routSegment.y2 },
+    const base = metersBetweenGeoCoordinates(
+      routeSegment.start,
+      routeSegment.end,
     );
-    const side1 = lineS1P;
-    const side2 = lineS2P;
+    const side1 = lineSP;
+    const side2 = lineEP;
     pointDeviation = triangleHeight(base, side1, side2);
   }
 
   return pointDeviation;
 };
 
-export const distanceBetweenGeoCoordinates = (
-  start: IPoint,
-  end: IPoint,
+export const metersBetweenGeoCoordinates = (
+  start: Point,
+  end: Point,
 ): number => {
   return haversine(
     {
-      longitude: start.x,
-      latitude: start.y,
+      longitude: Number(start.lon),
+      latitude: Number(start.lat),
     },
     {
-      longitude: end.x,
-      latitude: end.y,
+      longitude: Number(end.lon),
+      latitude: Number(end.lat),
     },
+    { unit: 'meter' },
   );
 };

@@ -1,0 +1,33 @@
+.input:hover {
+    border: 2px solid #5F9EDC;
+}
+
+.input:focus {
+    outline: none;
+    border: 2px solid #5F9EDC;
+}
+
+.input:disabled {
+    border: 2px solid #CC397B;
+    color: #50C878;
+    background: whitesmoke;
+    font-weight: normal;
+    /*letter-spacing: $letter-spacing;*/
+}
+
+.input {
+    width: 100%;
+    padding: 0.3rem 0.75rem;
+    color: black;
+    font-size: 20px;
+    /*line-height: $line-height-lg;*/
+    background-color: white;
+    border: 2px solid grey;
+    border-radius: 3px;
+}
+
+.input::placeholder {
+    color: #929BA4;
+    font-weight: normal;
+    /*letter-spacing: $letter-spacing;*/
+}

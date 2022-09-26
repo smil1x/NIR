@@ -1,0 +1,36 @@
+.button{
+    font-weight: 500;
+    padding: 10px 16px;
+    margin: 16px 0;
+    border-radius: 4px;
+    font-size: 16px;
+    /*line-height: $line-height-base;*/
+    letter-spacing: 1px;
+    border-width: 0;
+    outline: none;
+    cursor: pointer;
+    text-transform: uppercase;
+}
+.button:disabled{
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.button:hover:enabled{
+    opacity: 0.9;
+}
+/*.button:focus{*/
+/*    opacity: 0.9;*/
+/*}*/
+
+
+.primary{
+    background-color: #5F9EDC;
+    color: white;
+}
+
+.secondary{
+    background-color: inherit;
+    border: 1px solid #5F9EDC;
+    color: #5F9EDC;
+}

@@ -1,0 +1,9 @@
+.mapModal{
+    position: fixed;
+    width: 300px;
+    height: 200px;
+    background-color: white;
+    color: black;
+    z-index: 100;
+    opacity: 0.5;
+}
