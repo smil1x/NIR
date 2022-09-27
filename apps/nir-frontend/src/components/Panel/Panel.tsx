@@ -12,7 +12,9 @@ import { historyDataSample } from "../../mock-data/historyData";
 
 const Panel = ({onGeoJsonChange} : any) => {
   const [historyData, setHistoryData] = useState('')
-  const [routeData, setRouteData] = useState('')
+  const [routeData, setRouteData] = useState('');
+  const [shipId, setShipId] = useState('');
+  const [days, setDays] = useState('');
 
 
   const handleHistoryRoutDisplay = () => {
@@ -70,11 +72,8 @@ const Panel = ({onGeoJsonChange} : any) => {
     onGeoJsonChange(geoJson)
   }
 
-  const calculateDeviation = (shipId:any,
-                              routeData: any,
-                              normalDeviation: any,
-                              days: any) => {
-    requestDeviationFromRoute(shipId, JSON.parse(routeData), normalDeviation, days)
+  const calculateDeviation = (routeData: any, normalDeviation: any) => {
+    requestDeviationFromRoute(JSON.parse(routeData), normalDeviation, JSON.parse(historyData))
       .then((deviationModel) => {
         const geoJson = routeDeviationGeoJson(deviationModel.route, deviationModel.historyTrack);
         onGeoJsonChange(geoJson);
@@ -94,6 +93,11 @@ const Panel = ({onGeoJsonChange} : any) => {
                     handleHistoryRoutDisplay={handleHistoryRoutDisplay}
                     handleSubmit={getHistoryRout}
                     handleTest={handleTest}
+                    shipId={shipId}
+                    days={days}
+                    onDaysChange={setDays}
+                    onShipIdChange={setShipId}
+
     />
     <DeviationSection routeData={routeData}
                       setRouteData={setRouteData}
@@ -101,6 +105,7 @@ const Panel = ({onGeoJsonChange} : any) => {
                       removeRandomPoints={removeRandomPoints}
                       calculateDeviation={calculateDeviation}
                       useHistory={useHistory}
+                      isHistoryInfoExist={!historyData}
     />
   </div>
 };

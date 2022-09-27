@@ -9,12 +9,11 @@ export const requestHistoryRout = async (shipId: any, days: any) => {
   })
 }
 
-export const requestDeviationFromRoute = async (shipId: any,
-                                                route: any,
+export const requestDeviationFromRoute = async (route: any,
                                                 normalDeviation: any,
-                                                days:any) => {
-  return axios.post(`${BASE_URL}/${shipId}/deviation`,
-    {route, normalDeviation, days})
+                                                history: any) => {
+  return axios.post(`${BASE_URL}/deviation`,
+    {route, normalDeviation, history})
     .then((res:any) =>{
       return  res.data
     })

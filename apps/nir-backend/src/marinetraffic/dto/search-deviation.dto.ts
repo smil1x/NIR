@@ -6,9 +6,14 @@ export class SearchDeviationDto {
   @IsNotEmpty()
   @ApiProperty({
     description: "ship's route for deviation search",
-    example: '[[1,2], [0,0]]',
   })
   route: Point[];
+
+  @IsNotEmpty()
+  @ApiProperty({
+    description: "ship's history route for deviation search",
+  })
+  history: Point[];
 
   @IsNotEmpty()
   @IsString()
@@ -17,11 +22,4 @@ export class SearchDeviationDto {
     example: '500',
   })
   normalDeviation: string;
-
-  @IsNotEmpty()
-  @ApiProperty({
-    description: 'maximum permissible deviation in meters',
-    example: '3',
-  })
-  days: string;
 }

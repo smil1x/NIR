@@ -27,10 +27,9 @@ const DeviationSection = (
     addRandomDeviation,
     removeRandomPoints,
     calculateDeviation,
-    useHistory
+    useHistory,
+    isHistoryInfoExist,
   } :any) => {
-  const [shipId, setShipId] = useState('');
-  const [days, setDays] = useState('');
   const [normalDeviation, setNormalDeviation] = useState('');
   const [maxDegreeDeviation, setMaxDegreeDeviation] = useState('')
   const [pointsAmount, setPointsAmount] = useState('')
@@ -44,7 +43,7 @@ const DeviationSection = (
   }
 
   const onCalculateDeviation = () => {
-    calculateDeviation(shipId, routeData, normalDeviation, days)
+    calculateDeviation(routeData, normalDeviation)
   }
 
   return <section className={styles.deviationSection}>
@@ -69,14 +68,12 @@ const DeviationSection = (
     </div>
 
     <div className={styles.historyInputs}>
-      <TextInput value={shipId} placeholder = 'shipId' onChange={setShipId}/>
-      <TextInput value={days} placeholder = 'period in days' onChange={setDays}/>
       <TextInput value={normalDeviation}
                  placeholder = 'normal deviation in m'
                  onChange={setNormalDeviation}/>
       <Button color='primary'
               onClick={onCalculateDeviation}
-              disabled={!shipId || !days || !normalDeviation || !routeData}>
+              disabled={!normalDeviation || !routeData || isHistoryInfoExist}>
         Calculate
       </Button>
     </div>

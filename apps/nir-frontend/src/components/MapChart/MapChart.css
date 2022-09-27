@@ -4,3 +4,15 @@
     position: sticky;
     top: 80px
 }
+
+.mapLegend{
+    position: fixed;
+    bottom: 50px;
+    left: 15px;
+    background-image: url(./map-legend.png);
+    background-repeat:no-repeat;
+    width: 100px;
+    height: 125px;
+    z-index: 100;
+    transform: scale(1.2)
+}

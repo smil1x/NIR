@@ -38,6 +38,7 @@ const MapChart = ({geoJson}: any) => {
           }}
         />
       </Map>
+      <div className='mapLegend'/>
     </div>
 
   )

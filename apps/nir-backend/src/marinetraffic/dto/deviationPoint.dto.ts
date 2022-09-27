@@ -1,7 +1,6 @@
-import { HistoryPositionDto } from './history-position.dto';
-import { IRouteSegment } from '../../core/interfaces';
+import { IRouteSegment, Point } from '../../core/interfaces';
 
-export class DeviationPointDto extends HistoryPositionDto {
+export class DeviationPointDto extends Point {
   deviation: string;
 
   routeSegment: IRouteSegment;

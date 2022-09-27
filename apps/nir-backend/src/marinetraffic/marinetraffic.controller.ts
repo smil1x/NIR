@@ -46,7 +46,7 @@ export class MarinetrafficController {
     );
   }
 
-  @Post(':shipId/deviation')
+  @Post('/deviation')
   @ApiOperation({
     summary: 'Get deviation from the route',
   })
@@ -55,11 +55,9 @@ export class MarinetrafficController {
     type: DeviationModel,
   })
   async deviationFromRoute(
-    @Param('shipId') shipId: string,
     @Body() searchDeviationDto: SearchDeviationDto,
   ): Promise<DeviationModel> {
     return await this.marinetrafficService.deviationFromRoute(
-      shipId,
       searchDeviationDto,
     );
   }

@@ -98,23 +98,13 @@ export class MarinetrafficService {
   }
 
   async deviationFromRoute(
-    shipId: string,
     searchDeviationDto: SearchDeviationDto,
   ): Promise<DeviationModel> {
-    const { days, normalDeviation, route } = searchDeviationDto;
+    const { normalDeviation, route, history } = searchDeviationDto;
 
-    const historyTrack: HistoryPositionDto[] =
-      await this.getVesselHistoricalPositions(shipId, days);
-
-    const pointsDeviation: DeviationPointDto[] = historyTrack.map(
-      (historyPoint) => {
-        return this.pointDeviationFromRoute(
-          route,
-          historyPoint,
-          normalDeviation,
-        );
-      },
-    );
+    const pointsDeviation: DeviationPointDto[] = history.map((historyPoint) => {
+      return this.pointDeviationFromRoute(route, historyPoint, normalDeviation);
+    });
 
     return {
       route: route,
@@ -162,7 +152,7 @@ export class MarinetrafficService {
 
   pointDeviationFromRoute(
     route: Point[],
-    point: HistoryPositionDto,
+    point: Point,
     normalDeviation: string,
   ): DeviationPointDto {
     const nearestPointIndex = this.searchNearestRoutePointIndex(route, point);

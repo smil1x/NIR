@@ -1,11 +1,7 @@
-import { PositionDto } from '../../marinetraffic/dto';
-
-export interface IPoint {
-  x: number;
-  y: number;
+export class Point {
+  lat: string;
+  lon: string;
 }
-
-export type Point = Pick<PositionDto, 'lat' | 'lon'>;
 
 export interface IGeoVector2 {
   lat: number;
