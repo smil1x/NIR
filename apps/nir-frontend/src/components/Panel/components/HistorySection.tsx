@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import TextArea from "../../shared/TextArea/TextArea";
 import { isJson } from "../../../utils";
 
-const HistorySection = ({handleSubmit, handleHistoryRoutDisplay, historyData}: any) => {
+const HistorySection = ({handleSubmit, handleHistoryRoutDisplay, historyData, handleTest}: any) => {
   const [shipId, setShipId] = useState('');
   const [days, setDays] = useState('');
   const [historyRout, setHistoryRout] = useState(historyData)
@@ -15,9 +15,11 @@ const HistorySection = ({handleSubmit, handleHistoryRoutDisplay, historyData}: a
   }, [historyData])
 
   const onSubmit = () => {
-    console.log(shipId, days);
-    console.log(!days && !shipId);
     handleSubmit(days, shipId)
+  }
+
+  const onTest = () => {
+    handleTest()
   }
 
   const onDisplay = () => {
@@ -30,7 +32,10 @@ const HistorySection = ({handleSubmit, handleHistoryRoutDisplay, historyData}: a
       <TextInput value={shipId} placeholder = 'shipId' onChange={setShipId}/>
       <TextInput value={days} placeholder = 'period in days' onChange={setDays}/>
       <Button color='primary' disabled={!days || !shipId} onClick={onSubmit}>
-        Get route history
+        Get history
+      </Button>
+      <Button color='secondary' onClick={onTest}>
+        Test Data
       </Button>
     </div>
 

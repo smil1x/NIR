@@ -12,7 +12,7 @@ export interface IGeoVector2 {
   lon: number;
 }
 
-export interface IRoutSegment {
+export interface IRouteSegment {
   start: Point;
   end: Point;
 }

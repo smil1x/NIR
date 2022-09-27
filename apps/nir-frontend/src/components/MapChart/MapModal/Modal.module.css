@@ -1,9 +1,16 @@
 .mapModal{
     position: fixed;
-    width: 300px;
-    height: 200px;
+    padding: 5px 10px;
+    width: 180px;
+    height: 90px;
     background-color: white;
     color: black;
     z-index: 100;
     opacity: 0.5;
+}
+
+.title{
+    margin-bottom: 5px;
+    width: 100%;
+    text-align: center;
 }

@@ -1,4 +1,4 @@
-import { IRoutSegment, IGeoVector2, Point } from '../interfaces';
+import { IRouteSegment, IGeoVector2, Point } from '../interfaces';
 import * as haversine from 'haversine';
 
 export const vector2FromPoints = (p1: Point, p2: Point): IGeoVector2 => {
@@ -31,7 +31,7 @@ export const triangleHeight = (
 };
 
 export const pointDeviationFromRoutSegment = (
-  routeSegment: IRoutSegment,
+  routeSegment: IRouteSegment,
   point: Point,
 ): number => {
   let pointDeviation;

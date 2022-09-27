@@ -8,6 +8,7 @@ import {
   requestHistoryRout,
   routeDeviationGeoJson
 } from "../../utils";
+import { historyDataSample } from "../../mock-data/historyData";
 
 const Panel = ({onGeoJsonChange} : any) => {
   const [historyData, setHistoryData] = useState('')
@@ -29,7 +30,10 @@ const Panel = ({onGeoJsonChange} : any) => {
     requestHistoryRout(shipId, days).then(data => {
       setHistoryData(JSON.stringify(data, null, 2))
     })
-    setHistoryData('')
+  }
+
+  const handleTest = () => {
+    setHistoryData(JSON.stringify(historyDataSample, null, 2))
   }
 
   const addRandomDeviation = (maxDegreeDeviation: any) => {
@@ -89,6 +93,7 @@ const Panel = ({onGeoJsonChange} : any) => {
     <HistorySection historyData={historyData}
                     handleHistoryRoutDisplay={handleHistoryRoutDisplay}
                     handleSubmit={getHistoryRout}
+                    handleTest={handleTest}
     />
     <DeviationSection routeData={routeData}
                       setRouteData={setRouteData}

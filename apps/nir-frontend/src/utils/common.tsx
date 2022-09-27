@@ -69,27 +69,25 @@ export const styleHistoryTrack = (feature: any, hover: any, styles: any) => {
   }
 }
 
-export const styleRoutePoint = (feature: any, hover: any, styles: any) => {
+export const styleRoutePoint = (feature: any, hover: any, styles: any, onHover: any) => {
   if (feature.geometry.type === 'Point' && feature.properties.type === 'routePoint') {
     styles.fill = '#3D826B';
     styles.r = '8'
+    hover && onHover(feature.properties, 'routePoint')
   }
 }
 
-export const styleHistoryPoint = (feature: any, hover: any, styles: any, onHover?: any) => {
+export const styleHistoryPoint = (feature: any, hover: any, styles: any, onHover: any) => {
   if (feature.geometry.type === 'Point' && feature.properties.type === 'historyPoint') {
     styles.fill = '#E2AD05';
     styles.r = '6'
     if(feature.properties.isDeviated == true){
       styles.fill = 'red'
     }
-    if(hover && feature.properties.isDeviated){
-      onHover && onHover(feature.properties)
-    }
+    hover && onHover(feature.properties)
   }
 }
 
-
-// if(feature.properties.isDeviated == true){
-//   return { fill: 'red', r: '4' }
-// }
+const isEqualPoint = (point1:any, point2: any) => {
+  return point1.lat === point2.lat && point1.lon === point2.lon
+}

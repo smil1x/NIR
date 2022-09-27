@@ -2,7 +2,7 @@ import { Inject, Injectable } from '@nestjs/common';
 import { MARINETRAFFIC_CONFIG } from './constants';
 import axios from 'axios';
 import { HistoryPositionDto, PositionDto, SearchDeviationDto } from './dto';
-import { IMarinetrafficConfig, IRoutSegment, Point } from '../core/interfaces';
+import { IMarinetrafficConfig, IRouteSegment, Point } from '../core/interfaces';
 import { HistoricalPositionsMT } from './mock-data';
 import {
   metersBetweenGeoCoordinates,
@@ -81,21 +81,20 @@ export class MarinetrafficService {
     days: string,
     requestKey,
   ): Promise<string[][]> {
-    // return utils
-    //   .get(
-    //     `https://services.marinetraffic.com/api/exportvesseltrack/${requestKey}`,
-    //     {
-    //       params: {
-    //         v: 1,
-    //         shipid: shipId,
-    //         days: days,
-    //         protocol: 'json',
-    //         period: 'daily',
-    //       },
-    //     },
-    //   )
-    //   .then((res) => res.data);
-    return HistoricalPositionsMT;
+    return axios
+      .get(
+        `https://services.marinetraffic.com/api/exportvesseltrack/${requestKey}`,
+        {
+          params: {
+            v: 1,
+            shipid: shipId,
+            days: days,
+            protocol: 'json',
+            period: 'daily',
+          },
+        },
+      )
+      .then((res) => res.data);
   }
 
   async deviationFromRoute(
@@ -106,8 +105,6 @@ export class MarinetrafficService {
 
     const historyTrack: HistoryPositionDto[] =
       await this.getVesselHistoricalPositions(shipId, days);
-
-    // const route: HistoryPositionDto[] = VesselRouteMT;
 
     const pointsDeviation: DeviationPointDto[] = historyTrack.map(
       (historyPoint) => {
@@ -186,7 +183,7 @@ export class MarinetrafficService {
         point,
       );
     } else {
-      const leftRoutSegment: IRoutSegment = {
+      const leftRoutSegment: IRouteSegment = {
         start: {
           lon: route[nearestPointIndex].lon,
           lat: route[nearestPointIndex].lat,
@@ -196,7 +193,7 @@ export class MarinetrafficService {
           lat: route[nearestPointIndex - 1].lat,
         },
       };
-      const rightRoutSegment: IRoutSegment = {
+      const rightRoutSegment: IRouteSegment = {
         start: {
           lon: route[nearestPointIndex].lon,
           lat: route[nearestPointIndex].lat,
@@ -228,7 +225,7 @@ export class MarinetrafficService {
       ...point,
       isDeviated: deviation > Number(normalDeviation),
       deviation: deviation.toString(),
-      routSegment: {
+      routeSegment: {
         start: {
           lat: route[nearestPointIndex].lat,
           lon: route[nearestPointIndex].lon,

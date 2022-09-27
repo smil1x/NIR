@@ -1,15 +1,12 @@
-import styles from './Modal.module.css';
+import styles from "./Modal.module.css";
 
-const MapModal = (jsonData: any) => {
-  const testData = {
-    lon: '-52.6571',
-    lat: '64.2444',
-    deviation: '506'
-  }
-  const  a = JSON.stringify(testData, null, 3)
+const MapModal = ({ info }: any) => {
   return <div className={styles.mapModal}>
-    <div><pre>{JSON.stringify(testData, null, 2) }</pre></div>
-  </div>
-}
+    <div className={styles.title}>Point info</div>
+    {info.lat && <div>lat: {info.lat}</div>}
+    {info.lon && <div>lon: {info.lon}</div>}
+    {info.deviation && <div>deviation: {Number(info.deviation).toFixed(0)} meters</div>}
+  </div>;
+};
 
-export default MapModal
+export default MapModal;
