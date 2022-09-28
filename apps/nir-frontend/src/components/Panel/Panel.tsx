@@ -6,7 +6,7 @@ import {
   generateLineStringGeoFeature,
   generatePointsGeoFeatures, isJson, requestDeviationFromRoute,
   requestHistoryRout,
-  routeDeviationGeoJson
+  routeDeviationGeoJson, test
 } from "../../utils";
 import { historyDataSample } from "../../mock-data/historyData";
 
@@ -28,10 +28,13 @@ const Panel = ({onGeoJsonChange} : any) => {
     onGeoJsonChange(geoJson)
   }
 
-  const getHistoryRout = async (shipId:any, days: any) => {
-    requestHistoryRout(shipId, days).then(data => {
+  const getHistoryRout = async (shipId:any) => {
+    requestHistoryRout(shipId).then(data => {
       setHistoryData(JSON.stringify(data, null, 2))
     })
+    // test(shipId).then(data => {
+    //   setHistoryData(JSON.stringify(data, null, 2))
+    // })
   }
 
   const handleTest = () => {
@@ -94,8 +97,6 @@ const Panel = ({onGeoJsonChange} : any) => {
                     handleSubmit={getHistoryRout}
                     handleTest={handleTest}
                     shipId={shipId}
-                    days={days}
-                    onDaysChange={setDays}
                     onShipIdChange={setShipId}
 
     />

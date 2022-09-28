@@ -10,8 +10,6 @@ const HistorySection = ({handleSubmit,
                           historyData,
                           handleTest,
                           shipId,
-                          days,
-                          onDaysChange,
                           onShipIdChange
 }: any) => {
   const [historyRout, setHistoryRout] = useState(historyData)
@@ -21,7 +19,7 @@ const HistorySection = ({handleSubmit,
   }, [historyData])
 
   const onSubmit = () => {
-    handleSubmit(shipId, days)
+    handleSubmit(shipId)
   }
 
   const onTest = () => {
@@ -35,9 +33,8 @@ const HistorySection = ({handleSubmit,
   return <section className={styles.historySection}>
     <h2>Get ship route history</h2>
     <div className={styles.historyInputs}>
-      <TextInput value={shipId} placeholder = 'shipId' onChange={onShipIdChange}/>
-      <TextInput value={days} placeholder = 'period in days' onChange={onDaysChange}/>
-      <Button color='primary' disabled={!days || !shipId} onClick={onSubmit}>
+      <TextInput value={shipId} placeholder = 'name/mmsi/imo' onChange={onShipIdChange}/>
+      <Button color='primary' disabled={!shipId} onClick={onSubmit}>
         Get history
       </Button>
       <Button color='secondary' onClick={onTest}>

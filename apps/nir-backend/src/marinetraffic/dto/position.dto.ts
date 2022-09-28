@@ -6,15 +6,6 @@ export class PositionDto {
   @IsString()
   @ApiProperty({
     description:
-      "Maritime Mobile Service Identity - a nine-digit number sent in digital form over a radio frequency that identifies the vessel's transmitter station",
-    example: '636014709',
-  })
-  mmsi: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description:
       "Latitude - a geographic coordinate that specifies the north-south position of the vessel on the Earth's surface",
     example: '64.056160',
   })
@@ -60,15 +51,6 @@ export class PositionDto {
   @IsString()
   @ApiProperty({
     description:
-      "The AIS Navigational Status of the subject vessel as input by the vessel's crew. There might be discrepancies with the vessel's detail page when vessel speed is near zero (0) knots",
-    example: '0',
-  })
-  status: string;
-
-  @IsNotEmpty()
-  @IsString()
-  @ApiProperty({
-    description:
       "The date and time (in UTC) that the subject vessel's position or event was recorded by MarineTraffic",
     example: '2022-09-19T11:47:59',
   })
@@ -76,14 +58,12 @@ export class PositionDto {
 
   public static FromArray(positionArr: Array<string>): PositionDto {
     return {
-      mmsi: positionArr[0],
+      lon: positionArr[0],
       lat: positionArr[1],
-      lon: positionArr[2],
-      speed: positionArr[3],
+      speed: positionArr[2],
+      course: positionArr[3],
       heading: positionArr[4],
-      course: positionArr[5],
-      status: positionArr[6],
-      timestamp: positionArr[7],
+      timestamp: positionArr[5],
     };
   }
 }

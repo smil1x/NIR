@@ -1,21 +1,23 @@
 import { Inject, Injectable } from '@nestjs/common';
 import { MARINETRAFFIC_CONFIG } from './constants';
 import axios from 'axios';
-import { HistoryPositionDto, PositionDto, SearchDeviationDto } from './dto';
+import { PositionDto, SearchDeviationDto } from './dto';
 import { IMarinetrafficConfig, IRouteSegment, Point } from '../core/interfaces';
-import { HistoricalPositionsMT } from './mock-data';
 import {
   metersBetweenGeoCoordinates,
   pointDeviationFromRoutSegment,
 } from '../core/utils';
 import { DeviationPointDto } from './dto/deviationPoint.dto';
 import { DeviationModel } from './dto/deviation.model';
+import { RequestService } from '../core/services/request.service';
+import * as moment from 'moment';
 
 @Injectable()
 export class MarinetrafficService {
   constructor(
     @Inject(MARINETRAFFIC_CONFIG)
     protected readonly marinetrafficConfig: IMarinetrafficConfig,
+    protected readonly requestService: RequestService,
   ) {}
 
   async getSingleVesselPosition(shipId: number): Promise<PositionDto | []> {
@@ -37,25 +39,23 @@ export class MarinetrafficService {
     );
   }
 
-  async getVesselHistoricalPositions(
-    shipId: string,
-    days: string,
-  ): Promise<HistoryPositionDto[]> {
-    const { SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY } = this.marinetrafficConfig;
-    let responseData: string[][];
-    try {
-      responseData = await this.requestVesselHistoricalPositions(
+  async getVesselHistoricalPositions(ship: string): Promise<PositionDto[]> {
+    const shipId = await this.requestService.getShipId(ship);
+    if (shipId) {
+      const voyageInfo = await this.requestService.getVoyageInfo(shipId);
+      const startDate = moment
+        .unix(voyageInfo.departurePortTimestamp)
+        .format('YYYY-MM-DD');
+      const endDate = moment
+        .unix(voyageInfo.lastPosTimestamp)
+        .format('YYYY-MM-DD');
+      return this.requestService.getHistoricalPositions(
         shipId,
-        days,
-        SINGLE_VESSEL_HISTORICAL_POSITIONS_KEY,
+        startDate,
+        endDate,
       );
-    } catch (err) {
-      console.log(err.response.data);
     }
-
-    return responseData.map((pos) => {
-      return HistoryPositionDto.FromArray(pos);
-    });
+    return [];
   }
 
   private async requestSingleVesselPosition(
@@ -70,27 +70,6 @@ export class MarinetrafficService {
             v: 3,
             shipid: shipId,
             protocol: 'json',
-          },
-        },
-      )
-      .then((res) => res.data);
-  }
-
-  private async requestVesselHistoricalPositions(
-    shipId: string,
-    days: string,
-    requestKey,
-  ): Promise<string[][]> {
-    return axios
-      .get(
-        `https://services.marinetraffic.com/api/exportvesseltrack/${requestKey}`,
-        {
-          params: {
-            v: 1,
-            shipid: shipId,
-            days: days,
-            protocol: 'json',
-            period: 'daily',
           },
         },
       )
@@ -226,5 +205,14 @@ export class MarinetrafficService {
         },
       },
     };
+  }
+
+  async test(shipId: string): Promise<any> {
+    // 2022-09-26 13:42
+    // const his = this.requestService.getVoyageInfo(shipId);
+    // const date = moment.unix(Number(shipId)).format('YYYY-MM-DD HH:mm');
+
+    // console.log(date);
+    return 'date';
   }
 }

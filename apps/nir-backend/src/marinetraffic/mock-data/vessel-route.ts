@@ -1,6 +1,4 @@
-import { HistoryPositionDto } from '../dto';
-
-export const VesselRouteMT: HistoryPositionDto[] = [
+export const VesselRouteMT = [
   {
     mmsi: '636014709',
     imo: '9351098',

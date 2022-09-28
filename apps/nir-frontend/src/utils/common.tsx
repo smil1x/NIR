@@ -72,7 +72,7 @@ export const styleHistoryTrack = (feature: any, hover: any, styles: any) => {
 export const styleRoutePoint = (feature: any, hover: any, styles: any, onHover: any) => {
   if (feature.geometry.type === 'Point' && feature.properties.type === 'routePoint') {
     styles.fill = '#3D826B';
-    styles.r = '8'
+    styles.r = '5'
     hover && onHover(feature.properties, 'routePoint')
   }
 }
@@ -80,7 +80,7 @@ export const styleRoutePoint = (feature: any, hover: any, styles: any, onHover: 
 export const styleHistoryPoint = (feature: any, hover: any, styles: any, onHover: any) => {
   if (feature.geometry.type === 'Point' && feature.properties.type === 'historyPoint') {
     styles.fill = '#E2AD05';
-    styles.r = '6'
+    styles.r = '4'
     if(feature.properties.isDeviated == true){
       styles.fill = 'red'
     }

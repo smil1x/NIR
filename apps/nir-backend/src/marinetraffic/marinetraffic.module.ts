@@ -3,6 +3,7 @@ import { MarinetrafficController } from './marinetraffic.controller';
 import { MarinetrafficService } from './marinetraffic.service';
 import { MARINETRAFFIC_CONFIG } from './constants';
 import { IMarinetrafficConfig } from '../core/interfaces';
+import { RequestService } from "../core/services/request.service";
 
 @Module({
   imports: [],
@@ -15,6 +16,7 @@ export class MarinetrafficModule {
       module: MarinetrafficModule,
       controllers: [MarinetrafficController],
       providers: [
+        RequestService,
         MarinetrafficService,
         {
           provide: MARINETRAFFIC_CONFIG,
